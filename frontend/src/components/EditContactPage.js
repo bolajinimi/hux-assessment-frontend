@@ -1,8 +1,15 @@
-// src/components/EditContactPage.js
-
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Assuming you're using React Router v6
 
 const EditContactPage = () => {
+  const navigate = useNavigate();
+
+  const handleUpdateContact = () => {
+    // Here you would handle updating the contact
+    // After updating the contact, navigate back to the contact list page
+    navigate('/contacts-list'); // Replace '/contacts' with the path to your contact list page
+  };
+
   return (
     <div className="edit-contact-page bg-purple-100 min-h-screen flex flex-col justify-center items-center">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Edit Contact Information</h2>
@@ -20,7 +27,7 @@ const EditContactPage = () => {
           <input type="text" id="phone" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue="123-456-7890" />
         </div>
         <div className="flex items-center justify-between">
-          <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+          <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={handleUpdateContact}>
             Update Contact
           </button>
         </div>
