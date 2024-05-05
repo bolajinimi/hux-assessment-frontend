@@ -1,9 +1,7 @@
-// src/components/ContactDetailsPage.js
-
 import React from 'react';
 
 const ContactDetailsPage = () => {
-  // Dummy data for a contact (replace with actual data from your backend)
+ 
   const contact = {
     id: 1,
     name: 'John Doe',

@@ -1,13 +1,43 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Assuming you're using React Router v6
+import React  from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; 
 
 const CreateContactPage = () => {
+  
+    
+
   const navigate = useNavigate();
 
-  const handleAddContact = () => {
-    // Here you would handle adding the contact
-    // After adding the contact, navigate back to the contact list page
-    navigate('/contacts-list'); // Replace '/contacts' with the path to your contact list page
+  const handleAddContact = async () => {
+    try {
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM4MDIxMzQ2MWYxYzMwZGU5YTE4OWEiLCJpYXQiOjE3MTQ5NDY2NDUsImV4cCI6MTcxNDk1MDI0NX0.6Ooj6Bd1omocDUcxc0INpy1eoXc1-mz6g84Bc36mKbE'; 
+        const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const phoneNumber = document.getElementById('phoneNumber').value;
+
+
+
+      if (!firstName || !lastName || !phoneNumber) {
+        console.error('Missing required fields');
+        return;
+      }
+  
+      await axios.post('http://localhost:3008/contact', {
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+        
+      }, config);
+
+      navigate('/contacts-list');
+    } catch (error) {
+      console.error('Error while creating contact:', error);
+    }
   };
 
   return (
@@ -23,11 +53,11 @@ const CreateContactPage = () => {
           <input type="text" id="lastName" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
         </div>
         <div className="mb-6">
-          <label htmlFor="phone" className="block text-gray-700 font-bold mb-2">Phone</label>
-          <input type="text" id="phone" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          <label htmlFor="phoneNumber" className="block text-gray-700 font-bold mb-2">Phone</label>
+          <input type="text" id="phoneNumber" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
         </div>
         <div className="flex items-center justify-between">
-          <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={handleAddContact}>
+          <button onClick={handleAddContact} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" >
             Add Contact
           </button>
         </div>

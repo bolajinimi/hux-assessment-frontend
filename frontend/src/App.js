@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Homepage from './components/HomePage';
@@ -21,7 +20,6 @@ function App() {
           <Route path="/edit-contact/:id" element={<EditContactPage />} />
           <Route path="/contacts-list" element={<ContactsListPage />} />
           <Route path="/contact-details/:id" element={<ContactDetailsPage />} />
-          {/* Add other routes here */}
         </Routes>
       </Router>
  

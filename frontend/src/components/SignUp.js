@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; 
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -10,40 +11,57 @@ const SignupPage = () => {
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
-  const handleSignup = () => {
-    // Clear previous errors
+  const handleSignup = async () => {
+    
     setUsernameError('');
     setPasswordError('');
     setConfirmPasswordError('');
 
-    // Validate username
     if (!username.trim()) {
       setUsernameError('Please enter a username');
       return;
     }
 
-    // Validate password
+   
     if (!password.trim()) {
       setPasswordError('Please enter a password');
       return;
     }
 
-    // Validate confirm password
+   
     if (!confirmPassword.trim()) {
       setConfirmPasswordError('Please confirm your password');
       return;
     }
 
-    // Check if password and confirm password match
+    
     if (password !== confirmPassword) {
       setConfirmPasswordError('Passwords do not match');
       return;
     }
 
-    // Perform signup logic here...
+    try {
+      
+      const response = await axios.post('http://localhost:3008/user', {
+        username,
+        password,
+        confirmPassword,
+      });
 
-    // After successful signup, navigate to the login page
-    navigate('/login');
+      
+      if (response.status === 200) {
+        setUsername('');
+        setPassword('');
+        setConfirmPassword('');
+       
+        navigate('/login');
+      } else {
+        throw new Error('Signup failed');
+      }
+    } catch (error) {
+      console.error('Error during signup:', error);
+    
+    }
   };
 
   return (
@@ -94,3 +112,4 @@ const SignupPage = () => {
 }
 
 export default SignupPage;
+

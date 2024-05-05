@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
@@ -8,7 +9,7 @@ const LoginPage = () => {
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Clear previous errors
     setUsernameError('');
     setPasswordError('');
@@ -25,9 +26,26 @@ const LoginPage = () => {
       return;
     }
 
-    // Perform login logic here...
-    // Redirect to the create contact page upon successful login
-    navigate('/contacts-list');
+    try {
+        // Make a POST request using Axios
+        const response = await axios.post('http://localhost:3008/user/login', {
+          username,
+          password,
+        });
+  
+        // Check if the response is successful
+        if (response.status === 200) {
+          setUsername('');
+          setPassword('');
+          // After successful signup, navigate to the login page
+          navigate('/contacts-list');
+        } else {
+          throw new Error('Signup failed');
+        }
+      } catch (error) {
+        console.error('Error during signup:', error);
+        // Handle error appropriately, e.g., show error message to the user
+      }
   };
 
   return (

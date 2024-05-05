@@ -1,17 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { FaTrashAlt, FaEdit } from 'react-icons/fa'; // Importing icons for delete and edit
+import { FaTrashAlt, FaEdit } from 'react-icons/fa'; 
 
 const ContactsListPage = () => {
-  const [contacts, setContacts] = useState([
-    { id: 1, name: 'John Doe', email: 'john@example.com', phone: '123-456-7890' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '987-654-3210' },
-    { id: 3, name: 'Alice Johnson', email: 'alice@example.com', phone: '555-555-5555' },
-  ]);
+    const [contacts, setContacts] = useState([]);
 
-  const handleDeleteContact = (contactId) => {
-    setContacts(prevContacts => prevContacts.filter(contact => contact.id !== contactId));
-  };
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM4MDIxMzQ2MWYxYzMwZGU5YTE4OWEiLCJpYXQiOjE3MTQ5NDY2NDUsImV4cCI6MTcxNDk1MDI0NX0.6Ooj6Bd1omocDUcxc0INpy1eoXc1-mz6g84Bc36mKbE'; 
+        const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+        const response = await axios.get('http://localhost:3008/contact', config );
+        setContacts(response.data);
+      } catch (error) {
+        console.error('Error fetching contacts:', error);
+       
+      }
+    };
+
+    fetchContacts();
+  }, []);
+
+
+  const handleDeleteContact = async (contactId) => {
+    try {
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM4MDIxMzQ2MWYxYzMwZGU5YTE4OWEiLCJpYXQiOjE3MTQ5NDY2NDUsImV4cCI6MTcxNDk1MDI0NX0.6Ooj6Bd1omocDUcxc0INpy1eoXc1-mz6g84Bc36mKbE'; // Replace 'YOUR_BEARER_TOKEN_HERE' with your actual bearer token
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        await axios.delete(`http://localhost:3008/contact/${contactId}`, config);
+        setContacts(prevContacts => prevContacts.filter(contact => contact.id !== contactId));
+    } catch (error) {
+        console.error('Error deleting contact:', error);
+        
+    }
+};
 
   return (
     <div className="contacts-list-page bg-pink-100 min-h-screen">
@@ -45,11 +75,11 @@ const ContactsListPage = () => {
                 <tr key={contact.id}>
                   <td className="px-3 py-3 whitespace-nowrap">
                     <Link to={`/contact-details/${contact.id}`} className="text-blue-600 hover:underline">
-                      {contact.name}
+                      {contact.firstName}
                     </Link>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{contact.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{contact.phone}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{contact.lastName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{contact.phoneNumber}</td>
                   <td className="px-6 py-4 whitespace-nowrap flex">
                     <button onClick={() => handleDeleteContact(contact.id)} className="mr-8 text-red-500 hover:text-red-700">
                       <FaTrashAlt size={16} color="red" />
