@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { useNavigate, useParams  } from 'react-router-dom'; 
 
 const EditContactPage = () => {
     const { id } = useParams();
+  
   const navigate = useNavigate();
   const [contact, setContact] = useState({
     firstName: '',
@@ -11,9 +12,36 @@ const EditContactPage = () => {
     phoneNumber: ''
   });
 
+  useEffect(() => {
+    const fetchContact = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const response = await axios.get(`http://localhost:3008/contact/${id}`, config);
+        const fetchedContact = response.data;
+        setContact(fetchedContact);
+      } catch (error) {
+        console.error('Error fetching contact:', error);
+      }
+    };
+
+    fetchContact();
+  }, [id]); 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setContact((prevContact) => ({
+      ...prevContact,
+      [name]: value
+    }));
+  };
+
   const handleUpdateContact = async () => {
     try {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM4MDIxMzQ2MWYxYzMwZGU5YTE4OWEiLCJpYXQiOjE3MTQ5NDY2NDUsImV4cCI6MTcxNDk1MDI0NX0.6Ooj6Bd1omocDUcxc0INpy1eoXc1-mz6g84Bc36mKbE'; 
+      const token = localStorage.getItem("token")
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -33,15 +61,35 @@ const EditContactPage = () => {
       <form className="w-full max-w-sm">
         <div className="mb-4">
           <label htmlFor="firstName" className="block text-gray-700 font-bold mb-2">Name</label>
-          <input type="text" id="firstName" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue="John Doe" />
+          <input 
+          type="text" 
+          id="firstName"  
+          value={contact.firstName} 
+          name={"firstName"}
+          onChange={handleInputChange} 
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue="John Doe" />
         </div>
         <div className="mb-4">
           <label htmlFor="lastName" className="block text-gray-700 font-bold mb-2">Email</label>
-          <input type="email" id="lastName" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue="john@example.com" />
+          <input 
+          type="email" 
+          id="lastName"  
+          name={"lastName"}
+          value={contact.lastName} 
+          onChange={handleInputChange} 
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+           />
         </div>
         <div className="mb-6">
           <label htmlFor="phoneNumber" className="block text-gray-700 font-bold mb-2">Phone</label>
-          <input type="text" id="phoneNumber" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue="123-456-7890" />
+          <input 
+          type="text" 
+          id="phoneNumber"  
+          name={"phoneNumber"} 
+          value={contact.phoneNumber}
+          onChange={handleInputChange} 
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+           />
         </div>
         <div className="flex items-center justify-between">
           <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={handleUpdateContact}>

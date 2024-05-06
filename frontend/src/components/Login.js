@@ -8,12 +8,13 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [backendError, setBackendError] = useState('');
 
   const handleLogin = async () => {
     // Clear previous errors
     setUsernameError('');
     setPasswordError('');
-
+    setBackendError('');
     // Validate username
     if (!username.trim()) {
       setUsernameError('Please enter a username');
@@ -38,6 +39,7 @@ const LoginPage = () => {
           setUsername('');
           setPassword('');
           // After successful signup, navigate to the login page
+          localStorage.setItem("token",response.data.token)
           navigate('/contacts-list');
         } else {
           throw new Error('Signup failed');
@@ -45,6 +47,11 @@ const LoginPage = () => {
       } catch (error) {
         console.error('Error during signup:', error);
         // Handle error appropriately, e.g., show error message to the user
+        if (error.response && error.response.data && error.response.data.message) {
+          setBackendError(error.response.data.message);
+        } else {
+          setBackendError('An error occurred. Please try again later.');
+        }
       }
   };
 

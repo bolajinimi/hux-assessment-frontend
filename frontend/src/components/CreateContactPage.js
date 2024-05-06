@@ -10,7 +10,7 @@ const CreateContactPage = () => {
 
   const handleAddContact = async () => {
     try {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM4MDIxMzQ2MWYxYzMwZGU5YTE4OWEiLCJpYXQiOjE3MTQ5NDY2NDUsImV4cCI6MTcxNDk1MDI0NX0.6Ooj6Bd1omocDUcxc0INpy1eoXc1-mz6g84Bc36mKbE'; 
+        const token = localStorage.getItem("token")
         const config = {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -49,11 +49,10 @@ const SignupPage = () => {
       });
 
       
-      if (response.status === 200) {
+      if (response.status >= 200 && response.status < 300) {
         setUsername('');
         setPassword('');
         setConfirmPassword('');
-       
         navigate('/login');
       } else {
         throw new Error('Signup failed');

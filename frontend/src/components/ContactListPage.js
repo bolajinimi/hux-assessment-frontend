@@ -5,11 +5,10 @@ import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 
 const ContactsListPage = () => {
     const [contacts, setContacts] = useState([]);
-
-  useEffect(() => {
+    const [deleteContact, setDelete] = useState(false)
     const fetchContacts = async () => {
       try {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM4MDIxMzQ2MWYxYzMwZGU5YTE4OWEiLCJpYXQiOjE3MTQ5NDY2NDUsImV4cCI6MTcxNDk1MDI0NX0.6Ooj6Bd1omocDUcxc0INpy1eoXc1-mz6g84Bc36mKbE'; 
+        const token = localStorage.getItem("token")
         const config = {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -22,21 +21,21 @@ const ContactsListPage = () => {
        
       }
     };
-
+  useEffect(() => {
     fetchContacts();
-  }, []);
+  }, [deleteContact]);
 
 
   const handleDeleteContact = async (contactId) => {
     try {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM4MDIxMzQ2MWYxYzMwZGU5YTE4OWEiLCJpYXQiOjE3MTQ5NDY2NDUsImV4cCI6MTcxNDk1MDI0NX0.6Ooj6Bd1omocDUcxc0INpy1eoXc1-mz6g84Bc36mKbE'; // Replace 'YOUR_BEARER_TOKEN_HERE' with your actual bearer token
+        const token = localStorage.getItem("token")
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         };
         await axios.delete(`http://localhost:3008/contact/${contactId}`, config);
-        setContacts(prevContacts => prevContacts.filter(contact => contact.id !== contactId));
+        setDelete(true)
     } catch (error) {
         console.error('Error deleting contact:', error);
         
@@ -72,21 +71,22 @@ const ContactsListPage = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {contacts.map(contact => (
-                <tr key={contact.id}>
+                <tr key={contact._id}>
                   <td className="px-3 py-3 whitespace-nowrap">
-                    <Link to={`/contact-details/${contact.id}`} className="text-blue-600 hover:underline">
+                    <Link to={`/contact-details/${contact._id}`} className="text-blue-600 hover:underline">
                       {contact.firstName}
                     </Link>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{contact.lastName}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{contact.phoneNumber}</td>
                   <td className="px-6 py-4 whitespace-nowrap flex">
-                    <button onClick={() => handleDeleteContact(contact.id)} className="mr-8 text-red-500 hover:text-red-700">
-                      <FaTrashAlt size={16} color="red" />
-                    </button>
-                    <Link to={`/edit-contact/${contact.id}`} className="text-blue-500 hover:text-blue-700">
+                   
+                    <Link to={`/edit-contact/${contact._id}`} className="mr-6 text-blue-500 hover:text-blue-700">
                       <FaEdit size={16} color="blue" />
                     </Link>
+                    <button onClick={() => handleDeleteContact(contact._id)} className=" text-red-500 hover:text-red-700">
+                      <FaTrashAlt size={16} color="red" />
+                    </button>
                   </td>
                 </tr>
               ))}
